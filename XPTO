@@ -1,0 +1,63 @@
+-- ========================================================
+-- XPTO LTDA - CONTROLE DE PESSOAL
+-- ========================================================
+CREATE DATABASE IF NOT EXISTS bd_xpto;
+USE bd_xpto;
+
+-- 1. Tabela SETOR
+CREATE TABLE IF NOT EXISTS setor (
+    cod_setor VARCHAR(5) PRIMARY KEY,
+    descricao VARCHAR(50) NOT NULL,
+    ramal VARCHAR(10) NOT NULL
+);
+
+-- 2. Tabela CARGO
+CREATE TABLE IF NOT EXISTS cargo (
+    cod_cargo INT AUTO_INCREMENT PRIMARY KEY,
+    descricao VARCHAR(50) NOT NULL,
+    salario DECIMAL(10,2) NOT NULL
+);
+
+-- 3. Tabela FUNCIONARIOS
+CREATE TABLE IF NOT EXISTS funcionarios (
+    cod_func INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(150) NOT NULL,
+    admissao DATE NOT NULL,
+    cod_cargo INT NOT NULL,
+    cod_setor VARCHAR(5) NOT NULL,
+    FOREIGN KEY (cod_cargo) REFERENCES cargo(cod_cargo),
+    FOREIGN KEY (cod_setor) REFERENCES setor(cod_setor)
+);
+
+-- ========================================================
+-- INSERÇÃO DE DADOS DE EXEMPLO
+-- ========================================================
+
+INSERT INTO setor (cod_setor, descricao, ramal) VALUES
+('A01', 'Administrativo', '25'),
+('P01', 'Produção', '30'),
+('V01', 'Vendas', '20');
+
+INSERT INTO cargo (descricao, salario) VALUES
+('Aux. Escritório', 2000.00),
+('Costureira', 1800.00),
+('Vendedor Interno', 2200.00);
+
+INSERT INTO funcionarios (nome, admissao, cod_cargo, cod_setor) VALUES
+('Leonardo Ferreira Trevisani de Oliveira', '2022-03-15', 3, 'V01'),
+('Ana Laura Benites Sales', '2021-07-01', 2, 'P01'),
+('Ana Beatriz Lima', '2023-01-20', 1, 'A01'),
+('Lucas Gabriel Santos', '2021-11-05', 2, 'P01'),
+('Mariana Costa e Silva', '2020-05-18', 1, 'A01'),
+('Rafael Mota Barbosa', '2022-08-22', 3, 'V01'),
+('Camila Rodrigues Rocha', '2023-04-10', 2, 'P01');
+
+-- Consultas do enunciado
+-- Nomes e datas de admissão
+SELECT nome, admissao FROM funcionarios;
+-- Cargo de um funcionário
+SELECT f.nome, c.descricao AS cargo FROM funcionarios f JOIN cargo c ON f.cod_cargo = c.cod_cargo WHERE f.cod_func = 1;
+-- Salário e ramal do funcionário
+SELECT f.nome, c.salario, s.ramal FROM funcionarios f JOIN cargo c ON f.cod_cargo = c.cod_cargo JOIN setor s ON f.cod_setor = s.cod_setor;
+-- Funcionários de um setor
+SELECT f.nome FROM funcionarios f WHERE f.cod_setor = 'A01';
