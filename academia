@@ -1,0 +1,92 @@
+-- ========================================================
+-- ACADEMIA CORPO PERFEITO
+-- ========================================================
+CREATE DATABASE IF NOT EXISTS academia;
+USE bd_academia;
+
+-- 1. Tabela PROFESSORES
+CREATE TABLE IF NOT EXISTS professores (
+    cref VARCHAR(15) PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    telefone VARCHAR(15),
+    endereco VARCHAR(150)
+);
+
+-- 2. Tabela AULAS (cada aula é lecionada por um único professor)
+CREATE TABLE IF NOT EXISTS aulas (
+    cod_aula INT AUTO_INCREMENT PRIMARY KEY,
+    descricao VARCHAR(50) NOT NULL,
+    cref VARCHAR(15) NOT NULL,
+    FOREIGN KEY (cref) REFERENCES professores(cref)
+);
+
+-- 3. Tabela ALUNOS
+CREATE TABLE IF NOT EXISTS alunos (
+    cod_alu INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    telefone VARCHAR(15),
+    email VARCHAR(100),
+    sexo CHAR(1),
+    endereco VARCHAR(150)
+);
+
+-- 4. Tabela FREQUENTA (aluno x aula)
+CREATE TABLE IF NOT EXISTS frequenta (
+    cod_alu INT NOT NULL,
+    cod_aula INT NOT NULL,
+    PRIMARY KEY (cod_alu, cod_aula),
+    FOREIGN KEY (cod_alu) REFERENCES alunos(cod_alu),
+    FOREIGN KEY (cod_aula) REFERENCES aulas(cod_aula)
+);
+
+-- 5. Tabela ESPECIALIDADES
+CREATE TABLE IF NOT EXISTS especialidades (
+    cod_esp INT AUTO_INCREMENT PRIMARY KEY,
+    descricao VARCHAR(50) NOT NULL
+);
+
+-- 6. Tabela ESPEC_PROFE (professor x especialidade)
+CREATE TABLE IF NOT EXISTS espec_profe (
+    cref VARCHAR(15) NOT NULL,
+    cod_esp INT NOT NULL,
+    PRIMARY KEY (cref, cod_esp),
+    FOREIGN KEY (cref) REFERENCES professores(cref),
+    FOREIGN KEY (cod_esp) REFERENCES especialidades(cod_esp)
+);
+
+-- ========================================================
+-- INSERÇÃO DE DADOS DE EXEMPLO
+-- ========================================================
+
+INSERT INTO professores (cref, nome, telefone, endereco) VALUES
+('CREF001', 'Carlos Silva', '(15) 99999-0001', 'Rua A, 10, Votorantim, SP'),
+('CREF002', 'Amanda Souza', '(15) 99999-0002', 'Rua B, 20, Sorocaba, SP');
+
+INSERT INTO especialidades (descricao) VALUES
+('Musculação'), ('Dança'), ('Judô');
+
+INSERT INTO espec_profe (cref, cod_esp) VALUES
+('CREF001', 1), ('CREF001', 3), ('CREF002', 2);
+
+INSERT INTO aulas (descricao, cref) VALUES
+('Musculação', 'CREF001'),
+('Judô', 'CREF001'),
+('Dança', 'CREF002');
+
+INSERT INTO alunos (nome, telefone, email, sexo, endereco) VALUES
+('Leonardo Ferreira Trevisani de Oliveira', '(15) 98888-0001', 'leo@email.com', 'M', 'Av. São João, 1000, Votorantim, SP'),
+('Ana Laura Benites Sales', '(15) 98888-0002', 'ana.laura@email.com', 'F', 'Rua das Palmeiras, 250, Votorantim, SP'),
+('Ana Beatriz Lima', '(15) 98888-0003', 'ana.beatriz@email.com', 'F', 'Rua das Flores, 123, Sorocaba, SP'),
+('Lucas Gabriel Santos', '(15) 98888-0004', 'lucas@email.com', 'M', 'Rua XV de Novembro, 45, Votorantim, SP'),
+('Mariana Costa e Silva', '(15) 98888-0005', 'mariana@email.com', 'F', 'Av. Brasil, 880, Campinas, SP'),
+('Rafael Mota Barbosa', '(15) 98888-0006', 'rafael@email.com', 'M', 'Rua Sete de Setembro, 302, Sorocaba, SP'),
+('Camila Rodrigues Rocha', '(15) 98888-0007', 'camila@email.com', 'F', 'Rua Dom Pedro II, 55, São Paulo, SP');
+
+INSERT INTO frequenta (cod_alu, cod_aula) VALUES
+(1, 1), (1, 2), (2, 3), (3, 1), (4, 2), (5, 3), (6, 1), (7, 2), (7, 3);
+
+-- Consultas úteis
+-- Quais alunos frequentam a Musculação
+SELECT al.nome FROM alunos al JOIN frequenta f ON al.cod_alu = f.cod_alu JOIN aulas au ON f.cod_aula = au.cod_aula WHERE au.descricao = 'Musculação';
+-- Especialidades de cada professor
+SELECT p.nome, e.descricao FROM professores p JOIN espec_profe ep ON p.cref = ep.cref JOIN especialidades e ON ep.cod_esp = e.cod_esp;
