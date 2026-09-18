@@ -2,7 +2,7 @@
 -- XPTO LTDA - CONTROLE DE PESSOAL
 -- ========================================================
 CREATE DATABASE IF NOT EXISTS XPTO_LTDA;
-USE bd_xpto;
+USE XPTO_LTDA;
 
 -- 1. Tabela SETOR
 CREATE TABLE IF NOT EXISTS setor (
