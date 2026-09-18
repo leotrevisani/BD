@@ -2,7 +2,7 @@
 -- CONTROLE DE VENDAS
 -- ========================================================
 CREATE DATABASE IF NOT EXISTS controle_vendas;
-USE bd_vendas;
+USE controle_vendas;
 
 -- 1. Tabela FILIAIS
 CREATE TABLE IF NOT EXISTS filiais (
