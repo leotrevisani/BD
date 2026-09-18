@@ -1,8 +1,8 @@
 -- ========================================================
 -- ACADEMIA CORPO PERFEITO
 -- ========================================================
-CREATE DATABASE IF NOT EXISTS academia;
-USE bd_academia;
+CREATE DATABASE IF NOT EXISTS academia_CP;
+USE academia_CP;
 
 -- 1. Tabela PROFESSORES
 CREATE TABLE IF NOT EXISTS professores (
